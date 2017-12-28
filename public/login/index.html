@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
 
-  <title>Slider</title>
+  <title>Login</title>
 
   <!--[if lt IE 9]>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.js"></script>
@@ -12,29 +12,22 @@
 </head>
 
 <body>
-  <div class="ui points label"></div>
+  <div class="ui grid container">
+    <div class="ui users cards">
+  </div>
+
+  </div>
   <div id="scripts">
     <link rel="stylesheet" type="text/css" href="/semantic.min.css">
-
-    <style>
-      .points {
-        width: 90vw;
-        text-align: right;
-        font-size: 8em !important;
-      }
-
-      .points::first-letter {
-        color: blue;
-      }
-    </style>
 
     <script
       src="https://code.jquery.com/jquery-3.1.1.min.js"
       integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
       crossorigin="anonymous"></script>
+    <script src="https://www.gstatic.com/firebasejs/4.8.1/firebase.js"></script>
     <script src="/semantic.min.js"></script>
 
-    <script src="slider.js"></script>
+    <script src="login.js"></script>
   </div>
 </body>
 </html>

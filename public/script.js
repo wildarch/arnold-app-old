@@ -9,10 +9,11 @@ var config = {
   messagingSenderId: "360543261866"
 };
 firebase.initializeApp(config);
+
 var localList = {"text": []};
 //Select the DOM (HTML) elements
 var todoListDom = document.querySelector("#userList");
-var buttonDom = document.querySelector(".addButton");
+
 var textDom = document.querySelector("#text");
 
 /*
@@ -26,7 +27,7 @@ function drawElement(element,id){
   todoListDom.innerHTML += `
   <div class="item">
     <div class="right floated content">
-      <div class="ui button">+</div>
+      <div class="ui button" onclick="addElement(`+id+`)">+</div>
     </div>
     <img class="ui avatar image" src="` + element.image + `">
     <div class="content">
@@ -47,12 +48,11 @@ dbRef.on('value',function (x){
                               localList = x.val();
                               drawList(localList);
                              });
-function addElement(inputName){
-  localList[0].points += 100;
+function addElement(userId){
+  localList[userId].points += 100;
   //localList.push({"points":inputName});
   //empty the text element
   //textDom.value = "";
   drawList(localList);
   dbRef.set(localList);
 }
-buttonDom.addEventListener("click", function (){addElement(/*textDom.value*/);});
