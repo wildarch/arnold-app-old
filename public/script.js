@@ -9,11 +9,10 @@ var config = {
   messagingSenderId: "360543261866"
 };
 firebase.initializeApp(config);
-
+var userId = 0;
 var localList = {"text": []};
 //Select the DOM (HTML) elements
-var todoListDom = document.querySelector("#userList");
-
+var userListDom = document.querySelector("#userList");
 var textDom = document.querySelector("#text");
 
 /*
@@ -21,15 +20,16 @@ var textDom = document.querySelector("#text");
 */
 //
 var dbRef = firebase.database().ref().child('arnoldApp').child('users');
+var pointsRef = firebase.database().ref().child("arnoldApp").child("points");
 
 function drawElement(element,id){
   //This will add a new item to the #todoList
-  todoListDom.innerHTML += `
+  userListDom.innerHTML += `
   <div class="item">
     <div class="right floated content">
-      <div class="ui button" onclick="addElement(`+id+`)">+</div>
+      <div class="ui button" onclick="addElement(100,`+id+`)">+</div>
     </div>
-    <img class="ui avatar image" src="` + element.image + `">
+    <img class="ui avatar image" src="images/` + element.image + `">
     <div class="content">
       <a class="header">` + element.name + `</a>
       <div class="description"> (`+element.points+`) Got `+ 100 +` arnold punten from `+ "Fristy"+` </div>
@@ -37,22 +37,30 @@ function drawElement(element,id){
   </div>`;
   //<div class=\"todoListElement\" id=\"num "+id+"\">"+element.name+"</div>";
 }
-function drawList(list){
+
+function drawList(list,f){
   //This will draw all the elements in the list
-  todoListDom.innerHTML = "";
+  userListDom.innerHTML = "";
   //forEach will loop through all the elements in the array and append execute drawElement(element,index) on them
-  list.forEach(drawElement);
+  list.forEach(f);
 }
 //When the 'text' value changes in firebase
 dbRef.on('value',function (x){
                               localList = x.val();
-                              drawList(localList);
+                              drawList(localList,drawElement);
                              });
-function addElement(userId){
-  localList[userId].points += 100;
+function addElement(amount,otherId){
+  pointsRef.push({
+    "from": userId,
+    "to": otherId,
+    "amount": amount,
+    "time": Math.floor(Date.now() / 1000),
+    "description": "Plopper ontploft"
+  })
+  localList[otherId].points += 100;
   //localList.push({"points":inputName});
   //empty the text element
   //textDom.value = "";
-  drawList(localList);
+  //drawList(localList);
   dbRef.set(localList);
 }
