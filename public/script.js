@@ -12,30 +12,13 @@ firebase.initializeApp(config);
 var localList = {"text": []};
 //Select the DOM (HTML) elements
 var todoListDom = document.querySelector("#userList");
-var buttonDom = document.querySelector("#addButton");
+var buttonDom = document.querySelector(".addButton");
 var textDom = document.querySelector("#text");
 
 /*
-This is the structure of the datebase:
-{
-  "text" : [ {
-    "value" : "eat a pinda"
-  }, {
-    "value" : "groceries"
-  }, {
-    "value" : "test"
-  }, {
-    "value" : "someting"
-  }, {
-    "value" : "test"
-  } ]
-}
 
-So localList will contain everything inside the 'text' child
-
-localList[0].value will contain "eat a pinda"
 */
-//This is the reference to the text element on the TODO list
+//
 var dbRef = firebase.database().ref().child('arnoldApp').child('users');
 
 function drawElement(element,id){
@@ -45,10 +28,10 @@ function drawElement(element,id){
     <div class="right floated content">
       <div class="ui button">+</div>
     </div>
-    <img class="ui avatar image" src="/images/avatar2/small/lena.png">
+    <img class="ui avatar image" src="` + element.image + `">
     <div class="content">
       <a class="header">` + element.name + `</a>
-      <div class="description">Got `+ 100 +` arnold punten from `+ "Fristy"+` </div>
+      <div class="description"> (`+element.points+`) Got `+ 100 +` arnold punten from `+ "Fristy"+` </div>
     </div>
   </div>`;
   //<div class=\"todoListElement\" id=\"num "+id+"\">"+element.name+"</div>";
@@ -65,10 +48,11 @@ dbRef.on('value',function (x){
                               drawList(localList);
                              });
 function addElement(inputName){
-  localList.push({"value":inputName});
+  localList[0].points += 100;
+  //localList.push({"points":inputName});
   //empty the text element
-  textDom.value = "";
+  //textDom.value = "";
   drawList(localList);
   dbRef.set(localList);
 }
-//buttonDom.addEventListener("click", function (){addElement(textDom.value);});
+buttonDom.addEventListener("click", function (){addElement(/*textDom.value*/);});
