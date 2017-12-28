@@ -4,29 +4,21 @@ import { Grid, Card, Button, Image, Loader } from 'semantic-ui-react';
 export default class Login extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      userId: localStorage.getItem("userId")
-    };
     this.selectUser = this.selectUser.bind(this);
   }
 
   selectUser(id) {
-    this.setState({userId: id});
-    if(id !== null) {
-      localStorage.setItem("userId", id);
-    }
-    else {
-      localStorage.removeItem("userId");
-    }
+    this.props.onUserId(id);
   }
 
   render() {
     let row;
-    if(this.state.userId !== null) {
-      if(this.props.users.length <= this.state.userId) {
+    if(this.props.userId !== null) {
+      console.log(this.props.userId);
+      let user = this.props.users[this.props.userId];
+      if(!user) {
         return <Loader inline="centered">Loading..</Loader>;
       }
-      let user = this.props.users[this.state.userId];
       row = (
         <Grid.Row centered>
           <Card>

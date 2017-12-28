@@ -7,8 +7,10 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      users: []
+      users: [],
+      userId: localStorage.getItem("userId")
     };
+    this.onUserId = this.onUserId.bind(this);
   }
   componentWillMount() {
     const usersRef = firebase.database().ref().child('arnoldApp').child('users');
@@ -17,13 +19,35 @@ class App extends Component {
       newState.users = ref.val();
       this.setState(newState);
     }).bind(this);
+  }
 
+  onUserId(id) {
+    this.setState({userId: id});
+    if(id !== null) {
+      localStorage.setItem("userId", id);
+    }
+    else {
+      localStorage.removeItem("userId");
+    }
+
+    console.log(this.state.userId);
   }
+
   render() {
-    return (
-      <Login users={this.state.users} />
-    );
+    if(this.state.userId == null) {
+      return (
+        <Login users={this.state.users} onUserId={this.onUserId} userId={this.state.userId} />
+      );
+    }
+    else {
+      return <LeaderBoard />
+    }
   }
+}
+
+// Placeholder
+function LeaderBoard() {
+  return <p>This will show a leaderboard</p>
 }
 
 export default App;
