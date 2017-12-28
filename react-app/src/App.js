@@ -1,5 +1,6 @@
 import './App.css';
 import React, { Component } from 'react';
+import History from './history/History'
 import Login from './login/Login';
 import LeaderBoard from './leaderboard/LeaderBoard';
 import * as firebase from 'firebase';
@@ -9,15 +10,23 @@ class App extends Component {
     super(props);
     this.state = {
       users: [],
+      points: {},
       userId: localStorage.getItem("userId")
     };
     this.onUserId = this.onUserId.bind(this);
   }
   componentWillMount() {
     const usersRef = firebase.database().ref().child('arnoldApp').child('users');
+    const pointsRef = firebase.database().ref().child('arnoldApp').child('points').limitToLast(20);
     usersRef.on('value', ref => {
       const newState = this.state;
       newState.users = ref.val();
+      this.setState(newState);
+    }).bind(this);
+
+    pointsRef.on('value', ref => {
+      const newState = this.state;
+      newState.points = ref.val();
       this.setState(newState);
     }).bind(this);
   }
@@ -33,7 +42,7 @@ class App extends Component {
 
     console.log(this.state.userId);
   }
-  
+
   render() {
     if(this.state.userId == null) {
       return (
@@ -41,6 +50,7 @@ class App extends Component {
       );
     }
     else {
+      //return <History points={this.state.points} users={this.state.users} userId={this.state.userId} />
       return <LeaderBoard users={this.state.users} userId={this.state.userId} />
     }
   }
