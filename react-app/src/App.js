@@ -2,6 +2,7 @@ import './App.css';
 import React, { Component } from 'react';
 import Login from './login/Login';
 import LeaderBoard from './leaderboard/LeaderBoard';
+import AddPoints from './add-points/AddPoints';
 import * as firebase from 'firebase';
 
 class App extends Component {
@@ -9,9 +10,12 @@ class App extends Component {
     super(props);
     this.state = {
       users: [],
-      userId: localStorage.getItem("userId")
+      userId: localStorage.getItem("userId"),
+      arnold: null
     };
     this.onUserId = this.onUserId.bind(this);
+    this.onSelectArnold = this.onSelectArnold.bind(this);
+    this.onAddPoints = this.onAddPoints.bind(this);
   }
 
   componentWillMount() {
@@ -35,14 +39,27 @@ class App extends Component {
     console.log(this.state.userId);
   }
 
+  onSelectArnold(id) {
+    this.setState({arnold: id});
+  }
+
+  onAddPoints(points) {
+    // Change line below to update firebase
+    console.log(`Add ${points} to ${this.state.users[this.state.arnold].name} (by ${this.state.users[this.state.userId].name})`);
+    this.setState({arnold: null});
+  }
+
   render() {
     if(this.state.userId == null) {
       return (
         <Login users={this.state.users} onUserId={this.onUserId} userId={this.state.userId} />
       );
     }
+    else if(this.state.arnold === null) {
+      return <LeaderBoard users={this.state.users} userId={this.state.userId} onSelectArnold={this.onSelectArnold} />
+    }
     else {
-      return <LeaderBoard users={this.state.users} userId={this.state.userId} />
+      return <AddPoints victim={this.state.users[this.state.arnold]} onAddPoints={this.onAddPoints} />
     }
   }
 }
