@@ -1,6 +1,7 @@
 import './App.css';
 import React, { Component } from 'react';
 import Login from './login/Login';
+import AddPoints from './add-points/AddPoints';
 import * as firebase from 'firebase';
 
 class App extends Component {
@@ -11,7 +12,9 @@ class App extends Component {
       userId: localStorage.getItem("userId")
     };
     this.onUserId = this.onUserId.bind(this);
+    this.onAddPoints = this.onAddPoints.bind(this);
   }
+
   componentWillMount() {
     const usersRef = firebase.database().ref().child('arnoldApp').child('users');
     usersRef.on('value', ref => {
@@ -33,6 +36,10 @@ class App extends Component {
     console.log(this.state.userId);
   }
 
+  onAddPoints(points) {
+    console.log("points: " + points);
+  }
+
   render() {
     if(this.state.userId == null) {
       return (
@@ -40,14 +47,9 @@ class App extends Component {
       );
     }
     else {
-      return <LeaderBoard />
+      return <AddPoints victim={{name: "Daan", image: "daan.jpg"}} onAddPoints={this.onAddPoints} />
     }
   }
-}
-
-// Placeholder
-function LeaderBoard() {
-  return <p>This will show a leaderboard</p>
 }
 
 export default App;
