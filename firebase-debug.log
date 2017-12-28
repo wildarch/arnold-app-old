@@ -1,0 +1,26 @@
+[debug] [2017-12-28T23:49:43.803Z] ----------------------------------------------------------------------
+[debug] [2017-12-28T23:49:43.805Z] Command:       /home/daan/.nvm/versions/node/v9.3.0/bin/node /home/daan/.nvm/versions/node/v9.3.0/bin/firebase deploy
+[debug] [2017-12-28T23:49:43.805Z] CLI Version:   3.16.0
+[debug] [2017-12-28T23:49:43.805Z] Platform:      linux
+[debug] [2017-12-28T23:49:43.805Z] Node Version:  v9.3.0
+[debug] [2017-12-28T23:49:43.805Z] Time:          Fri Dec 29 2017 00:49:43 GMT+0100 (CET)
+[debug] [2017-12-28T23:49:43.805Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2017-12-28T23:49:43.825Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2017-12-28T23:49:43.825Z] > authorizing via signed-in user
+[debug] [2017-12-28T23:49:43.827Z] > refreshing access token with scopes: ["email","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","openid"]
+[debug] [2017-12-28T23:49:43.827Z] >>> HTTP REQUEST POST https://www.googleapis.com/oauth2/v3/token  
+ { refresh_token: '1/CRlyrhgB8KLGgnvWVkPbe9blmxJwPYE6-LoO6w00HyQ',
+  client_id: '563584335869-fgrhgmd47bqnekij5i8b5pr03ho849e6.apps.googleusercontent.com',
+  client_secret: 'j9iVZfS8kkCEFUPaAeJV0sAi',
+  grant_type: 'refresh_token',
+  scope: 'email https://www.googleapis.com/auth/cloud-platform https://www.googleapis.com/auth/cloudplatformprojects.readonly https://www.googleapis.com/auth/firebase openid' } 
+ Fri Dec 29 2017 00:49:43 GMT+0100 (CET)
+[debug] [2017-12-28T23:49:44.009Z] <<< HTTP RESPONSE 200
+[debug] [2017-12-28T23:49:44.082Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/projects/arnoldapp-beb09  
+  
+ Fri Dec 29 2017 00:49:44 GMT+0100 (CET)
+[debug] [2017-12-28T23:49:44.896Z] <<< HTTP RESPONSE 200
+[debug] [2017-12-28T23:49:44.897Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/database/arnoldapp-beb09/tokens  
+  
+ Fri Dec 29 2017 00:49:44 GMT+0100 (CET)
