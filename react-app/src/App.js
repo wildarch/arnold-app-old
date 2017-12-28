@@ -20,6 +20,11 @@ class App extends Component {
 
   componentWillMount() {
     const usersRef = firebase.database().ref().child('arnoldApp').child('users');
+    const pointsRef = firebase.database().ref().child('arnoldApp').child('points');
+    this.setState({usersRef: usersRef});
+    this.setState({pointsRef: pointsRef});
+
+    console.log(this.state);
     usersRef.on('value', ref => {
       const newState = this.state;
       newState.users = ref.val();
@@ -43,9 +48,24 @@ class App extends Component {
     this.setState({arnold: id});
   }
 
-  onAddPoints(points) {
+  onAddPoints(points, desc) {
     // Change line below to update firebase
-    console.log(`Add ${points} to ${this.state.users[this.state.arnold].name} (by ${this.state.users[this.state.userId].name})`);
+    console.log(`Add ${points} to ${this.state.users[this.state.arnold].name} (by ${this.state.users[this.state.userId].name}). Description: ${desc}`);
+    const newTransactionRef = this.state.pointsRef.push();
+    newTransactionRef.set({
+      amount: points,
+      from: this.state.userId,
+      to: this.state.arnold,
+      time: Date.now()
+    });
+
+    this.state.usersRef.transaction(users => {
+      if(users) {
+        users[this.state.arnold].points += points;
+      }
+      return users;
+    });
+
     this.setState({arnold: null});
   }
 

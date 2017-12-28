@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Grid, Image, Card, Button } from 'semantic-ui-react';
+import { Grid, Image, Card, Button, Input } from 'semantic-ui-react';
 import Slider from '../slider/Slider';
 
 export default class AddPoints extends Component {
@@ -7,7 +7,8 @@ export default class AddPoints extends Component {
     super(props);
     this.onSetPoints = this.onSetPoints.bind(this);
     this.state = {
-      points: 1
+      points: 1,
+      description: ""
     };
   }
 
@@ -31,8 +32,14 @@ export default class AddPoints extends Component {
         <Grid.Row>
           <Slider onChange={this.onSetPoints} points={this.state.points} />
         </Grid.Row>
+        <Grid.Row>
+          <Input placeholder="Description" size="large" 
+            onChange={(e) => this.setState({description: e.target.value})}/>
+        </Grid.Row>
         <Grid.Row centered>
-          <Button icon="plus" size="massive" content="Add points" onClick={(e) => this.props.onAddPoints(this.state.points)} />
+          <Button icon="plus" size="massive" content="Add points"
+            disabled={this.state.description.length === 0}
+            onClick={(e) => this.props.onAddPoints(this.state.points, this.state.description)} />
         </Grid.Row>
       </Grid>
     )
