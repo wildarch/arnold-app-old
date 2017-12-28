@@ -5,9 +5,16 @@
     <title>Arnold app</title>
   </head>
   <body>
+    <div class="ui three buttons">
+  <button class="ui active button" onclick="drawList(localList,drawElement);">Show list</button>
+  <button class="ui button" onClick="showLast();">Show Last</button>
+  <button class="ui button">Three</button>
+  </div>
+    <style media="screen">
+
+    </style>
     <script src="https://www.gstatic.com/firebasejs/4.8.1/firebase.js"></script>
     <div class="addArnoldPoints">
-      <button class="addButton">addButton</button>
     </div>
     <div class="ui middle aligned divided list" id="userList">
     </div>

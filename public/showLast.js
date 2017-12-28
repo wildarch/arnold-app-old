@@ -39,9 +39,9 @@ function drawEvent(element,id){
   userListDom.innerHTML += `
   <div class="item">
     <div class="right floated content">
-      <div class="ui button" onclick="addElement(100,`+id+`)">+</div>
+      <div class="ui button" onclick="addElement(100,`+id+`)">-</div>
     </div>
-    <img class="ui avatar image" src="images/` + element.image + `">
+    <img class="ui avatar image" src="images/` + localList[element.to].image + `">
     <div class="content">
       <a class="header">` + element.description + `</a>
       <div class="description"> (`+localList[element.from].name+`) gave  `+ element.amount +` arnold punten to `+ localList[element.to].name+` `+timeSince(element.time*1000)+` ago</div>
