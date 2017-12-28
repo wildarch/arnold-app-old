@@ -1,6 +1,7 @@
 import './App.css';
 import React, { Component } from 'react';
 import Login from './login/Login';
+import LeaderBoard from './leaderboard/LeaderBoard';
 import * as firebase from 'firebase';
 
 class App extends Component {
@@ -32,7 +33,7 @@ class App extends Component {
 
     console.log(this.state.userId);
   }
-
+  
   render() {
     if(this.state.userId == null) {
       return (
@@ -40,14 +41,11 @@ class App extends Component {
       );
     }
     else {
-      return <LeaderBoard />
+      return <LeaderBoard users={this.state.users} userId={this.state.userId} />
     }
   }
 }
 
-// Placeholder
-function LeaderBoard() {
-  return <p>This will show a leaderboard</p>
-}
+
 
 export default App;
