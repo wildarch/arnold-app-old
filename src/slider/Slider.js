@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import { Label } from 'semantic-ui-react';
-import './slider.css';
+import { Label, Icon, Header } from 'semantic-ui-react';
 
 export default class Slider extends Component {
   constructor(props) {
@@ -35,9 +34,17 @@ export default class Slider extends Component {
       textAlign: "right",
       fontSize: "3em"
     }
-    return (<Label className="slider" content={this.props.points} style={sliderStyle}
-    onTouchStart={this.onTouchStart} onTouchMove={this.onTouchMove}
-    onTouchEnd={this.onTouchEnd} onTouchCancel={this.onTouchEnd}/>);
+    return (
+      <div>
+        <Header textAlign="right" size="small">Drag below to increase</Header>
+        <Label style={sliderStyle}
+            onTouchStart={this.onTouchStart} onTouchMove={this.onTouchMove}
+            onTouchEnd={this.onTouchEnd} onTouchCancel={this.onTouchEnd}>
+          <Icon name="left arrow" color="blue" />
+          {this.props.points}
+        </Label>
+      </div>
+    );
   }
 }
 

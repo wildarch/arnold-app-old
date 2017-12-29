@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Grid, Image, Card, Button, Input } from 'semantic-ui-react';
+import { Grid, Image, Card, Button, Form, Header, TextArea } from 'semantic-ui-react';
 import Slider from '../slider/Slider';
 
 export default class AddPoints extends Component {
@@ -32,9 +32,11 @@ export default class AddPoints extends Component {
         <Grid.Row>
           <Slider onChange={this.onSetPoints} points={this.state.points} />
         </Grid.Row>
-        <Grid.Row>
-          <Input placeholder="Description" size="large" 
-            onChange={(e) => this.setState({description: e.target.value})}/>
+        <Grid.Row columns="sixteen">
+          <Form>
+            <Header>Description</Header>
+            <TextArea rows="1" placeholder='Slept on a dixi' onChange={(e) => this.setState({description: e.target.value})}/>
+          </Form>
         </Grid.Row>
         <Grid.Row centered>
           <Button icon="plus" size="massive" content="Add points"

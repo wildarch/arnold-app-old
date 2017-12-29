@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Grid, Card, Button, Image, Loader } from 'semantic-ui-react';
+import { Grid, Card, Button, Image, Loader, Header } from 'semantic-ui-react';
 
 export default class Login extends Component {
   constructor(props) {
@@ -35,14 +35,17 @@ export default class Login extends Component {
     }
     else {
       row = (
-        <Card.Group>
-          {this.props.users.map((user, index) => (
-            <Card
-              header={user.name}
-              image={"/images/" + user.image}
-              onClick={(e) => this.selectUser(index)} />
-          ))}
-        </Card.Group>
+        <Grid.Row centered>
+          <Header textAlign="center" size="huge" content="Bonjour, chinois?" subheader="Who are you?" />
+          <Card.Group>
+            {this.props.users.map((user, index) => (
+              <Card
+                header={user.name}
+                image={"/images/" + user.image}
+                onClick={(e) => this.selectUser(index)} />
+            ))}
+          </Card.Group>
+        </Grid.Row>
       );
     }
     return (

@@ -4,6 +4,7 @@ import Login from './login/Login';
 import LeaderBoard from './leaderboard/LeaderBoard';
 import AddPoints from './add-points/AddPoints';
 import * as firebase from 'firebase';
+import { Menu, Icon } from 'semantic-ui-react';
 
 class App extends Component {
   constructor(props) {
@@ -30,6 +31,8 @@ class App extends Component {
       newState.users = ref.val();
       this.setState(newState);
     }).bind(this);
+
+    this.onUserId(localStorage.getItem('userId'));
   }
 
   onUserId(id) {
@@ -40,8 +43,7 @@ class App extends Component {
     else {
       localStorage.removeItem("userId");
     }
-
-    console.log(this.state.userId);
+    console.log(id);
   }
 
   onSelectArnold(id) {
@@ -61,7 +63,9 @@ class App extends Component {
 
     this.state.usersRef.transaction(users => {
       if(users) {
+        console.log("Users found!");
         users[this.state.arnold].points += points;
+        console.log(users[this.state.arnold].points);
       }
       return users;
     });
@@ -70,16 +74,52 @@ class App extends Component {
   }
 
   render() {
+    const spacerStyle = {
+      marginBottom: "50px"
+    };
     if(this.state.userId == null) {
       return (
         <Login users={this.state.users} onUserId={this.onUserId} userId={this.state.userId} />
       );
     }
     else if(this.state.arnold === null) {
-      return <LeaderBoard users={this.state.users} userId={this.state.userId} onSelectArnold={this.onSelectArnold} />
+      let userName;
+      if(this.state.users.length > this.state.userId) {
+        userName = this.state.users[this.state.userId].name;
+      }
+      else {
+        userName = "Unknown user";
+      }
+      return (
+          <div>
+            <Menu fixed="top" inverted>
+              <Menu.Item active>
+                <Icon name="browser" /> Leaderboard
+              </Menu.Item>
+              <Menu.Item position="right" onClick={(e) => this.onUserId(null)}>
+                <Icon name="sign out"/> Sign out {userName}
+              </Menu.Item>
+            </Menu>
+            <div style={spacerStyle}/>
+            <LeaderBoard users={this.state.users} userId={this.state.userId} onSelectArnold={this.onSelectArnold} />
+          </div>
+      )
     }
     else {
-      return <AddPoints victim={this.state.users[this.state.arnold]} onAddPoints={this.onAddPoints} />
+      return (
+        <div>
+          <Menu fixed="top" inverted>
+            <Menu.Item onClick={(e) => this.onSelectArnold(null)}>
+              <Icon name="arrow left" /> Leaderboard
+            </Menu.Item>
+            <Menu.Item active>
+              <Icon name="plus" /> Add Arnold punten
+            </Menu.Item>
+          </Menu>
+          <div style={spacerStyle}/>
+          <AddPoints victim={this.state.users[this.state.arnold]} onAddPoints={this.onAddPoints} />
+        </div>
+      )
     }
   }
 }
