@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import Login from './login/Login';
 import LeaderBoard from './leaderboard/LeaderBoard';
 import AddPoints from './add-points/AddPoints';
+import History from "./history/History";
 import * as firebase from 'firebase';
 
 class App extends Component {
