@@ -30,7 +30,7 @@ export default class Slider extends Component {
 
   render() {
     const sliderStyle = {
-      width: "90vw",
+      minWidth: "13ch",
       textAlign: "right",
       fontSize: "3em"
     }

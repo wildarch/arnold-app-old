@@ -29,10 +29,10 @@ export default class AddPoints extends Component {
             </Card.Content>
           </Card>
         </Grid.Row>
-        <Grid.Row>
+        <Grid.Row centered>
           <Slider onChange={this.onSetPoints} points={this.state.points} />
         </Grid.Row>
-        <Grid.Row columns="sixteen">
+        <Grid.Row columns="sixteen" centered>
           <Form>
             <Header>Description</Header>
             <TextArea rows="1" placeholder='Slept on a dixi' onChange={(e) => this.setState({description: e.target.value})}/>
