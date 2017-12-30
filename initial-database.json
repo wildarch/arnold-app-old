@@ -1,0 +1,49 @@
+{
+  "arnoldApp" : {
+    "points" : {
+      "init" : {
+        "amount" : "1",
+        "from" : 0,
+        "to" : 0,
+        "description": "Because he is the Arnold"
+      }
+    },
+    "users" : [ {
+      "image" : "frits.jpg",
+      "name" : "Arnold",
+      "points" : 1
+    }, {
+      "image" : "bart.jpg",
+      "name" : "Barteljaap",
+      "points" : 0
+    }, {
+      "image" : "daan.jpg",
+      "name" : "Daan",
+      "points" : 0
+    }, {
+      "image" : "diede.jpg",
+      "name" : "Charles",
+      "points" : 0
+    }, {
+      "image" : "arthur.jpg",
+      "name" : "Arthur",
+      "points" : 0
+    }, {
+      "image" : "geert.jpg",
+      "name" : "Peerto",
+      "points" : 0
+    }, {
+      "image" : "henrik.jpg",
+      "name" : "Herder Henrik",
+      "points" : 0
+    }, {
+      "image" : "ilse.jpg",
+      "name" : "Isle",
+      "points" : 0
+    }, {
+      "image" : "ruben.jpg",
+      "name" : "Rubain putain",
+      "points" : 0
+    } ]
+  }
+}

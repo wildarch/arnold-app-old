@@ -6,6 +6,9 @@ import AddPoints from './add-points/AddPoints';
 import * as firebase from 'firebase';
 import { Menu, Icon } from 'semantic-ui-react';
 
+// The one and only Arnold is the Walfrips
+const TRUE_ARNOLD_INDEX = 0;
+
 class App extends Component {
   constructor(props) {
     super(props);
@@ -50,27 +53,43 @@ class App extends Component {
     this.setState({arnold: id});
   }
 
-  onAddPoints(points, desc) {
-    // Change line below to update firebase
-    console.log(`Add ${points} to ${this.state.users[this.state.arnold].name} (by ${this.state.users[this.state.userId].name}). Description: ${desc}`);
+  addPoints(points, from, to, description) {
     const newTransactionRef = this.state.pointsRef.push();
     newTransactionRef.set({
       amount: points,
-      from: this.state.userId,
-      to: this.state.arnold,
-      time: Date.now()
+      from: from,
+      to: to,
+      time: Date.now(),
+      description: description
     });
+
+    let trueArnoldBonusPoints = 0;
 
     this.state.usersRef.transaction(users => {
       if(users) {
-        console.log("Users found!");
-        users[this.state.arnold].points += points;
-        console.log(users[this.state.arnold].points);
+        users[to].points += points;
+
+        if(to !== TRUE_ARNOLD_INDEX) {
+          const arnoldPoints = users[to].points;
+          const trueArnoldPoints = users[TRUE_ARNOLD_INDEX].points;
+          trueArnoldBonusPoints = Math.max(0, arnoldPoints - trueArnoldPoints + 1);
+        }
       }
       return users;
     });
 
+    if(trueArnoldBonusPoints > 0) {
+      this.applyTrueArnoldCorrection(trueArnoldBonusPoints);
+    }
+  }
+
+  onAddPoints(points, description) {
+    this.addPoints(points, this.state.userId, this.state.arnold, description);
     this.setState({arnold: null});
+  }
+
+  applyTrueArnoldCorrection(points) {
+    this.addPoints(points, TRUE_ARNOLD_INDEX, TRUE_ARNOLD_INDEX, "Because he is the Arnold");
   }
 
   render() {
