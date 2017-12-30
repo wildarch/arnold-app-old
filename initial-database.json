@@ -5,6 +5,7 @@
         "amount" : "1",
         "from" : 0,
         "to" : 0,
+        "time": 0,
         "description": "Because he is the Arnold"
       }
     },

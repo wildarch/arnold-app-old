@@ -1,8 +1,8 @@
-import './App.css';
 import React, { Component } from 'react';
 import Login from './login/Login';
 import LeaderBoard from './leaderboard/LeaderBoard';
 import AddPoints from './add-points/AddPoints';
+import History from './history/History';
 import * as firebase from 'firebase';
 import { Menu, Icon } from 'semantic-ui-react';
 
@@ -15,7 +15,8 @@ class App extends Component {
     this.state = {
       users: [],
       userId: localStorage.getItem("userId"),
-      arnold: null
+      arnold: null,
+      showHistory: false
     };
     this.onUserId = this.onUserId.bind(this);
     this.onSelectArnold = this.onSelectArnold.bind(this);
@@ -30,9 +31,11 @@ class App extends Component {
 
     console.log(this.state);
     usersRef.on('value', ref => {
-      const newState = this.state;
-      newState.users = ref.val();
-      this.setState(newState);
+      this.setState({users: ref.val()});
+    }).bind(this);
+
+    pointsRef.on('value', ref => {
+      this.setState({points: ref.val()});
     }).bind(this);
 
     this.onUserId(localStorage.getItem('userId'));
@@ -46,11 +49,12 @@ class App extends Component {
     else {
       localStorage.removeItem("userId");
     }
-    console.log(id);
+    this.resetScroll();
   }
 
   onSelectArnold(id) {
     this.setState({arnold: id});
+    this.resetScroll();
   }
 
   addPoints(points, from, to, description) {
@@ -92,6 +96,10 @@ class App extends Component {
     this.addPoints(points, TRUE_ARNOLD_INDEX, TRUE_ARNOLD_INDEX, "Because he is the Arnold");
   }
 
+  resetScroll() {
+    window.scrollTo(0, 0);
+  }
+
   render() {
     const spacerStyle = {
       marginBottom: "50px"
@@ -99,6 +107,22 @@ class App extends Component {
     if(this.state.userId == null) {
       return (
         <Login users={this.state.users} onUserId={this.onUserId} userId={this.state.userId} />
+      );
+    }
+    else if(this.state.showHistory) {
+      return (
+        <div>
+          <Menu fixed="top" inverted>
+            <Menu.Item onClick={(e) => {this.setState({showHistory: false}); this.resetScroll();}}>
+              <Icon name="arrow left" /> Leaderboard
+            </Menu.Item>
+            <Menu.Item active>
+              <Icon name="calendar" /> History
+            </Menu.Item>
+          </Menu>
+          <div style={spacerStyle}/>
+          <History users={this.state.users} points={this.state.points} />
+        </div>
       );
     }
     else if(this.state.arnold === null) {
@@ -115,7 +139,10 @@ class App extends Component {
               <Menu.Item active>
                 <Icon name="browser" /> Leaderboard
               </Menu.Item>
-              <Menu.Item position="right" onClick={(e) => this.onUserId(null)}>
+              <Menu.Item onClick={(e) => {this.setState({showHistory: true}); this.resetScroll();}}>
+                <Icon name="calendar" /> History
+              </Menu.Item>
+              <Menu.Item position="right" onClick={(e) => {this.onUserId(null); this.resetScroll();}}>
                 <Icon name="sign out"/> Sign out {userName}
               </Menu.Item>
             </Menu>
@@ -128,7 +155,7 @@ class App extends Component {
       return (
         <div>
           <Menu fixed="top" inverted>
-            <Menu.Item onClick={(e) => this.onSelectArnold(null)}>
+            <Menu.Item onClick={(e) => {this.onSelectArnold(null); this.resetScroll();}}>
               <Icon name="arrow left" /> Leaderboard
             </Menu.Item>
             <Menu.Item active>

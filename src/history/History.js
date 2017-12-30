@@ -1,21 +1,11 @@
 import React, { Component } from 'react';
-import { Grid, Card, Button, Image, Loader, List, Container } from 'semantic-ui-react';
+import { List, Container } from 'semantic-ui-react';
 import timeSince from './timeSince';
 import toArray from './toArray';
 
 export default class LeaderBoard extends Component {
-  constructor(props) {
-    super(props);
-    this.addPoints = this.addPoints.bind(this);
-  }
-  addPoints(id) {
-    alert(id);
-    //timeSince(1);
-  }
   render() {
-
-    //let user = this.props.users;
-    let row = (
+    return (
       <Container>
       <List divided verticalAlign='middle' size="big">
         {toArray(this.props.points).map((element, index) => (
@@ -35,8 +25,6 @@ export default class LeaderBoard extends Component {
         ))}
       </List>
       </Container>
-    );
-    return (row)
-
+    )
   }
 }
