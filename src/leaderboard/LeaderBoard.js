@@ -10,7 +10,7 @@ export default class LeaderBoard extends Component {
             .map((user, index) => {user.index = index; return user;})
             .sort((a, b) => b.points - a.points)
             .map(user => (
-              <List.Item onClick={(e) => this.props.onSelectArnold(user.index)}>
+              <List.Item key={user.index} onClick={(e) => this.props.onSelectArnold(user.index)}>
                <List.Content floated='right' verticalAlign="middle">
                  <Button icon="add" content="points" />
                </List.Content>
