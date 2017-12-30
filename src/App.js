@@ -29,7 +29,6 @@ class App extends Component {
     this.setState({usersRef: usersRef});
     this.setState({pointsRef: pointsRef});
 
-    console.log(this.state);
     usersRef.on('value', ref => {
       this.setState({users: ref.val()});
     }).bind(this);

@@ -14,7 +14,6 @@ export default class Login extends Component {
   render() {
     let row;
     if(this.props.userId !== null) {
-      console.log(this.props.userId);
       let user = this.props.users[this.props.userId];
       if(!user) {
         return <Loader inline="centered">Loading..</Loader>;
