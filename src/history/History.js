@@ -8,7 +8,7 @@ export default class LeaderBoard extends Component {
     return (
       <Container>
       <List divided verticalAlign='middle' size="big">
-        {[...toArray(this.props.points)].sort((a, b) => a.time - b.time).map((element, index) => (
+        {[...toArray(this.props.points)].sort((a, b) => b.time - a.time).map((element, index) => (
           <List.Item key={index}>
              <List.Content floated='right'>
              </List.Content>
