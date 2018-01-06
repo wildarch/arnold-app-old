@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Login from './login/Login';
 import LeaderBoard from './leaderboard/LeaderBoard';
 import AddPoints from './add-points/AddPoints';
-import History from './history/History';
+import History, { RemoveError  } from './history/History';
 import * as firebase from 'firebase';
 import { Menu, Icon } from 'semantic-ui-react';
 
@@ -21,6 +21,8 @@ class App extends Component {
     this.onUserId = this.onUserId.bind(this);
     this.onSelectArnold = this.onSelectArnold.bind(this);
     this.onAddPoints = this.onAddPoints.bind(this);
+    this.onRemovePoints = this.onRemovePoints.bind(this);
+    this.onRecoverPoints = this.onRecoverPoints.bind(this);
   }
 
   componentWillMount() {
@@ -91,6 +93,34 @@ class App extends Component {
     this.setState({arnold: null});
   }
 
+  onTogglePoints(key) {
+    const point = this.state.points[key];
+    const amount = point.amount;
+    const receiver = point.to;
+    const wasDeleted = point.hasOwnProperty('deleted') && point.deleted;
+    if(receiver === TRUE_ARNOLD_INDEX) {
+      return new RemoveError("The true Arnold always deserves points given to him");
+    }
+    this.state.pointsRef.child(key).transaction(point => {
+      if(point !== null) {
+        point.deleted = !wasDeleted;
+        return point;
+      }
+    });
+    this.state.usersRef.transaction(users => {
+      users[receiver].points += wasDeleted ? amount : -amount;
+      return users;
+    });
+  }
+
+  onRemovePoints(key) {
+    this.onTogglePoints(key);
+  }
+
+  onRecoverPoints(key) {
+    this.onTogglePoints(key);
+  }
+
   applyTrueArnoldCorrection(points) {
     this.addPoints(points, TRUE_ARNOLD_INDEX, TRUE_ARNOLD_INDEX, "Because he is the Arnold");
   }
@@ -120,7 +150,7 @@ class App extends Component {
             </Menu.Item>
           </Menu>
           <div style={spacerStyle}/>
-          <History users={this.state.users} points={this.state.points} />
+          <History users={this.state.users} points={this.state.points} onRemove={this.onRemovePoints} onRecover={this.onRecoverPoints} />
         </div>
       );
     }
@@ -146,7 +176,7 @@ class App extends Component {
               </Menu.Item>
             </Menu>
             <div style={spacerStyle}/>
-            <LeaderBoard users={this.state.users} userId={this.state.userId} onSelectArnold={this.onSelectArnold} />
+              <LeaderBoard users={this.state.users} userId={this.state.userId} onSelectArnold={this.onSelectArnold} />
           </div>
       )
     }
