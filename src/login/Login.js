@@ -36,9 +36,10 @@ export default class Login extends Component {
       row = (
         <Grid.Row centered>
           <Header textAlign="center" size="huge" content="Bonjour, chinois?" subheader="Who are you?" />
-          <Card.Group>
+          <Card.Group centered >
             {this.props.users.map((user, index) => (
               <Card
+                centered
                 header={user.name}
                 image={"/images/" + user.image}
                 onClick={(e) => this.selectUser(index)} />
@@ -48,7 +49,7 @@ export default class Login extends Component {
       );
     }
     return (
-      <Grid container>
+      <Grid centered container>
         {row}
       </Grid>
     )
