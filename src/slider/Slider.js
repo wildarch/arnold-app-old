@@ -4,18 +4,32 @@ import { Label, Icon, Header } from 'semantic-ui-react';
 export default class Slider extends Component {
   constructor(props) {
     super(props);
-    this.onTouchStart = this.onTouchStart.bind(this);
-    this.onTouchMove = this.onTouchMove.bind(this);
-    this.onTouchEnd = this.onTouchEnd.bind(this);
+    this.onSlideStart = this.onSlideStart.bind(this);
+    this.onSlideMove = this.onSlideMove.bind(this);
+    this.onSlideEnd = this.onSlideEnd.bind(this);
+
+    this.state = {
+        initialX: null,
+        mouseDown: false
+    };
   }
 
-  onTouchStart(e) {
-    this.setState({initialPosition: getTouchCoordinates(e)});
+  onSlideStart(e) {
+    this.setState({
+      initialX: getCoordinates(e).x,
+      mouseDown: true
+    });
   }
 
-  onTouchMove(e) {
-    const current = getTouchCoordinates(e);
-    const diff = this.state.initialPosition.x - current.x;
+  onSlideMove(e) {
+    const current = getCoordinates(e);
+    if(e.type === "touchmove" || this.state.mouseDown) {
+      this.setPoints(current.x);
+    }
+  }
+
+  setPoints(x) {
+    const diff = this.state.initialX - x;
     let points = Math.pow(10, Math.round(diff * 0.04));
     points = Math.max(1, points);
     points = Math.min(1000000, points);
@@ -24,8 +38,12 @@ export default class Slider extends Component {
     }
   }
 
-  onTouchEnd(e) {
-    this.setState({initialPosition: null});
+  onSlideEnd(e) {
+    e.preventDefault();
+    this.setState({
+        initialX: null,
+        mouseDown: false
+    });
   }
 
   render() {
@@ -37,9 +55,15 @@ export default class Slider extends Component {
     return (
       <div>
         <Header textAlign="right" size="small">Drag below to increase</Header>
-        <Label style={sliderStyle}
-            onTouchStart={this.onTouchStart} onTouchMove={this.onTouchMove}
-            onTouchEnd={this.onTouchEnd} onTouchCancel={this.onTouchEnd}>
+        <Label className="unselectable" style={sliderStyle}
+            onTouchStart={this.onSlideStart} 
+            onTouchMove={this.onSlideMove}
+            onTouchEnd={this.onSlideEnd} 
+            onTouchCancel={this.onSlideEnd}
+            onMouseDown={this.onSlideStart}
+            onMouseMove={this.onSlideMove}
+            onMouseUp={this.onSlideEnd}
+            onMouseLeave={this.onSlideEnd}>
           <Icon name="left arrow" color="blue" />
           {this.props.points}
         </Label>
@@ -48,10 +72,28 @@ export default class Slider extends Component {
   }
 }
 
-function getTouchCoordinates(event) {
-  let touch = event.changedTouches[0];
+function getCoordinates(event) {
+  let x, y;
+  switch(event.type) {
+    case "mousedown":
+    case "mousemove":
+    case "mouseleave":
+      x = event.clientX;
+      y = event.clientY;
+      break;
+    case "touchstart":
+    case "touchmove":
+    case "touchend":
+    case "touchcancel":
+      let touch = event.changedTouches[0];
+      x = touch.clientX;
+      y = touch.clientY;
+      break;
+    default:
+      throw TypeError("event type " + event.type + " not supported");
+  }
   return {
-    x: touch.clientX,
-    y: touch.clientY
+    x: x,
+    y: y
   };
 }
