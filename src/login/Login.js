@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { Grid, Card, Button, Image, Loader, Header } from 'semantic-ui-react';
+import { Image, Grid, Card, Header } from 'semantic-ui-react';
+import { Link, Redirect } from 'react-router-dom';
 
 export default class Login extends Component {
   constructor(props) {
@@ -12,46 +13,27 @@ export default class Login extends Component {
   }
 
   render() {
-    let row;
-    if(this.props.userId !== null) {
-      let user = this.props.users[this.props.userId];
-      if(!user) {
-        return <Loader inline="centered">Loading..</Loader>;
-      }
-      row = (
-        <Grid.Row centered>
-          <Card>
-            <Image src={"/images/" + user.image} />
-            <Card.Content>
-              <Card.Header>
-                {user.name}
-              </Card.Header>
-            </Card.Content>
-            <Button atttached="bottom" icon="sign out" content="Sign out" onClick={(e) => this.selectUser(null)} />
-          </Card>
-        </Grid.Row>
-      );
-    }
-    else {
-      row = (
-        <Grid.Row centered>
-          <Header textAlign="center" size="huge" content="Bonjour, chinois?" subheader="Who are you?" />
-          <Card.Group centered >
-            {this.props.users.map((user, index) => (
-              <Card
-                centered
-                header={user.name}
-                image={"/images/" + user.image}
-                onClick={(e) => this.selectUser(index)} />
-            ))}
-          </Card.Group>
-        </Grid.Row>
-      );
+    if(this.props.userId) {
+      return <Redirect to='/' />
     }
     return (
       <Grid centered container>
-        {row}
+        <Grid.Row centered>
+          <Header textAlign="center" size="huge" content="Bonjour, chinois?" subheader="Who are you?" />
+          <Card.Group>
+            {this.props.users.map((user, index) => (
+              <Card key={index} centered as='div'>
+                <Link to='/' key={index} onClick={(e) => this.selectUser(index)}>
+                  <Image src={"/images/" + user.image} />
+                </Link>
+                <Card.Content>
+                  <Card.Header>{user.name}</Card.Header>
+                </Card.Content>
+              </Card>
+            ))}
+          </Card.Group>
+        </Grid.Row>
       </Grid>
-    )
+    );
   }
 }

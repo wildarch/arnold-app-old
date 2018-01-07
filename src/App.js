@@ -5,6 +5,7 @@ import AddPoints from './add-points/AddPoints';
 import History, { RemoveError  } from './history/History';
 import * as firebase from 'firebase';
 import { Menu, Icon } from 'semantic-ui-react';
+import { BrowserRouter as Router, Route, NavLink, Redirect } from 'react-router-dom';
 
 // The one and only Arnold is the Walfrips
 const TRUE_ARNOLD_INDEX = 0;
@@ -19,10 +20,47 @@ class App extends Component {
       showHistory: false
     };
     this.onUserId = this.onUserId.bind(this);
-    this.onSelectArnold = this.onSelectArnold.bind(this);
     this.onAddPoints = this.onAddPoints.bind(this);
     this.onRemovePoints = this.onRemovePoints.bind(this);
     this.onRecoverPoints = this.onRecoverPoints.bind(this);
+
+    this.routes = [
+      { path: '/login',
+        hideInSidebar: true,
+        content: () => (<Login 
+            users={this.state.users} 
+            onUserId={this.onUserId} 
+            userId={this.state.userId} 
+          />)
+      },
+      { path: '/',
+        exact: true,
+        name: "Leaderboard",
+        icon: "browser",
+        content: () => (<LeaderBoard 
+            users={this.state.users} 
+            userId={this.state.userId} 
+          />)
+      },
+      { path: '/history',
+        name: "History",
+        icon: "calendar",
+        content: ({ location }) => (<History 
+            users={this.state.users} 
+            points={this.state.points} 
+            onRemove={this.onRemovePoints} 
+            onRecover={this.onRecoverPoints} 
+            location={location}
+          />)
+      },
+      { path: '/add-points/:to',
+        hideInSidebar: true,
+        content: ({ match }) => (<AddPoints 
+            victim={this.state.users[parseInt(match.params.to, 10)]}
+            onAddPoints={(points, desc) => this.onAddPoints(points, desc, parseInt(match.params.to, 10))}
+          />)
+      }
+    ];
   }
 
   componentWillMount() {
@@ -50,11 +88,6 @@ class App extends Component {
     else {
       localStorage.removeItem("userId");
     }
-    this.resetScroll();
-  }
-
-  onSelectArnold(id) {
-    this.setState({arnold: id});
     this.resetScroll();
   }
 
@@ -88,8 +121,8 @@ class App extends Component {
     }
   }
 
-  onAddPoints(points, description) {
-    this.addPoints(points, this.state.userId, this.state.arnold, description);
+  onAddPoints(points, description, arnold) {
+    this.addPoints(points, this.state.userId, arnold, description);
     this.setState({arnold: null});
   }
 
@@ -133,69 +166,48 @@ class App extends Component {
     const spacerStyle = {
       marginBottom: "50px"
     };
-    if(this.state.userId == null) {
-      return (
-        <Login users={this.state.users} onUserId={this.onUserId} userId={this.state.userId} />
-      );
+
+    let userName = null;
+    if (this.state.userId !== null && this.state.userId < this.state.users.length) {
+      userName = this.state.users[this.state.userId].name;
     }
-    else if(this.state.showHistory) {
-      return (
+
+    return (
+      <Router>
         <div>
-          <Menu fixed="top" inverted>
-            <Menu.Item onClick={(e) => {this.setState({showHistory: false}); this.resetScroll();}}>
-              <Icon name="arrow left" /> Leaderboard
-            </Menu.Item>
-            <Menu.Item active>
-              <Icon name="calendar" /> History
-            </Menu.Item>
-          </Menu>
-          <div style={spacerStyle}/>
-          <History users={this.state.users} points={this.state.points} onRemove={this.onRemovePoints} onRecover={this.onRecoverPoints} />
-        </div>
-      );
-    }
-    else if(this.state.arnold === null) {
-      let userName;
-      if(this.state.users.length > this.state.userId) {
-        userName = this.state.users[this.state.userId].name;
-      }
-      else {
-        userName = "Unknown user";
-      }
-      return (
-          <div>
-            <Menu fixed="top" inverted>
-              <Menu.Item active>
-                <Icon name="browser" /> Leaderboard
-              </Menu.Item>
-              <Menu.Item onClick={(e) => {this.setState({showHistory: true}); this.resetScroll();}}>
-                <Icon name="calendar" /> History
-              </Menu.Item>
-              <Menu.Item position="right" onClick={(e) => {this.onUserId(null); this.resetScroll();}}>
-                <Icon name="sign out"/> Sign out {userName}
+          <Route render={props => {
+            if(this.state.userId === null && props.location.pathname !== '/login') {
+              console.log(props);
+              return <Redirect to='/login' />
+            }
+            else {
+              return "";
+            }
+          }} />
+          {userName && (
+            <Menu fixed='top' inverted>
+              {this.routes.filter(r => !r.hideInSidebar).map((route, index) => (
+                <NavLink exact to={route.path} key={index} className='item' activeClassName='active'>
+                  <Icon name={route.icon} /> {route.name}
+                </NavLink>
+              ))}
+              <Menu.Item position='right' onClick={(e) => this.onUserId(null)}>
+                <Icon name='sign out' /> Sign out {userName}
               </Menu.Item>
             </Menu>
-            <div style={spacerStyle}/>
-              <LeaderBoard users={this.state.users} userId={this.state.userId} onSelectArnold={this.onSelectArnold} />
-          </div>
-      )
-    }
-    else {
-      return (
-        <div>
-          <Menu fixed="top" inverted>
-            <Menu.Item onClick={(e) => {this.onSelectArnold(null); this.resetScroll();}}>
-              <Icon name="arrow left" /> Leaderboard
-            </Menu.Item>
-            <Menu.Item active>
-              <Icon name="plus" /> Add Arnold punten
-            </Menu.Item>
-          </Menu>
+          )}
           <div style={spacerStyle}/>
-          <AddPoints victim={this.state.users[this.state.arnold]} onAddPoints={this.onAddPoints} />
+          {this.routes.map((route, index) => (
+            <Route
+              key={index}
+              path={route.path}
+              exact={route.exact}
+              component={route.content}
+            />
+          ))}
         </div>
-      )
-    }
+      </Router>
+    )
   }
 }
 

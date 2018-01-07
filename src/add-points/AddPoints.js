@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { Grid, Image, Card, Button, Form, Header, TextArea } from 'semantic-ui-react';
+import { Icon, Grid, Image, Card, Button, Form, Header, TextArea, Loader } from 'semantic-ui-react';
+import { Link } from 'react-router-dom';
 import Slider from '../slider/Slider';
 
 export default class AddPoints extends Component {
@@ -17,6 +18,15 @@ export default class AddPoints extends Component {
   }
 
   render() {
+    if(!this.props.victim) {
+      return (
+        <Grid container>
+          <Grid.Row>
+            <Loader active inline='centered' content='Loading' />
+          </Grid.Row>
+        </Grid>
+      );
+    }
     return (
       <Grid container>
         <Grid.Row centered>
@@ -39,9 +49,13 @@ export default class AddPoints extends Component {
           </Form>
         </Grid.Row>
         <Grid.Row centered>
-          <Button icon="plus" size="massive" content="Add points"
-            disabled={this.state.description.length === 0}
-            onClick={(e) => this.props.onAddPoints(this.state.points, this.state.description)} />
+          <Button size="massive"
+              disabled={this.state.description.length === 0}
+              onClick={(e) => this.props.onAddPoints(this.state.points, this.state.description)}>
+            <Link to='/'>
+              <Icon name='plus' /> Add points
+            </Link>
+          </Button>
         </Grid.Row>
       </Grid>
     )
