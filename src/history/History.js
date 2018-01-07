@@ -9,7 +9,8 @@ export default class History extends Component {
     this.onRemove = this.onRemove.bind(this);
     this.onRecover = this.onRecover.bind(this);
     this.state = {
-      error: null
+      error: null,
+      errorTimer: null
     };
 
   }
@@ -17,8 +18,13 @@ export default class History extends Component {
   onRemove(key) {
     const err = this.props.onRemove(key);
     if(err) {
-      this.setState({error: err.message});
-      setTimeout(() => this.setState({error: null}), 3000);
+      if(this.state.errorTimer !== null) {
+        clearTimeout(this.state.errorTimer);
+      }
+      this.setState({
+          error: err.message,
+          errorTimer: setTimeout(() => this.setState({error: null}), 3000)
+      });
     }
   }
 
@@ -46,11 +52,18 @@ export default class History extends Component {
                   onClose={() => this.setState({error: null})}
                   open={this.state.error !== null}
                 >
-                  <div style={{position: 'fixed', textAlign: 'center', top: '10%', left: 0, right: 0, height: 0}}>
-                    <Message compact negative>
-                      <Message.Header>Could not remove event</Message.Header>
-                      <p>{this.state.error}</p>
-                    </Message>
+                  <div style={{
+                      position: 'fixed', 
+                      textAlign: 'center', 
+                      top: '10%', 
+                      left: 0, 
+                      right: 0, 
+                      height: 0
+                  }}>
+                    <Message compact negative
+                        header='Could not remove event'
+                        content={this.state.error}
+                    />
                   </div>
                 </TransitionablePortal>
                </List.Content>

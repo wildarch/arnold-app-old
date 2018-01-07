@@ -114,7 +114,7 @@ class App extends Component {
   }
 
   onRemovePoints(key) {
-    this.onTogglePoints(key);
+    return this.onTogglePoints(key);
   }
 
   onRecoverPoints(key) {
