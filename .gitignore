@@ -22,3 +22,4 @@ yarn-error.log*
 
 /public/images/
 firebase-debug.log
+database.json
